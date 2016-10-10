@@ -26,8 +26,6 @@ def parseLine(frequencyDict, wordIndexDict, nynorsk_line, bokmaal_line, article_
         # If translation fails, the word is prefixed with '*'
         elif '*' in nb_tokenized[i] or '*' in nn_tokenized[i]:
             continue
-        elif nn_tokenized[i] == nb_tokenized[i]:
-            continue
 
         # If the edit distance ratio is lower than 40 % for three consecutive words,
         # we conclude that we have gone astray, and drop the rest of the sentence.
