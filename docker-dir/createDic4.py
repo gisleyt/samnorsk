@@ -4,8 +4,8 @@
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
-import nltk
 import operator
+import re
 from fuzzywuzzy import fuzz
 
 
@@ -16,8 +16,8 @@ def getIndexKey(wordIndexDict, word):
 
 
 def parseLine(frequencyDict, wordIndexDict, nynorsk_line, bokmaal_line, article_number):
-    nn_tokenized = nltk.word_tokenize(nynorsk_line, language='norwegian')
-    nb_tokenized = nltk.word_tokenize(bokmaal_line, language='norwegian')
+    nn_tokenized = re.findall(r'\w+', nynorsk_line,  re.MULTILINE | re.UNICODE)
+    nb_tokenized = re.findall(r'\w+', bokmaal_line,  re.MULTILINE | re.UNICODE)
     consecutive_skips = 0
     for i in range(len(nb_tokenized)):
         if (i >= len(nn_tokenized)):
@@ -63,8 +63,8 @@ def createDict(frequencyDict, wordIndexDict, nynorsk, bokmaal):
                 elif (nn_line == "" and nb_line == ""):
                     break
                 else:
-                    nn_sentences = nltk.sent_tokenize(nn_line, language='norwegian')
-                    nb_sentences = nltk.sent_tokenize(nb_line, language='norwegian')
+                    nn_sentences = nn_line.split(".")
+                    nb_sentences =  nb_line.split(".")
                     for i in range(len(nb_sentences)):
                         if (i >= len(nn_sentences)):
                             break
@@ -86,9 +86,6 @@ def writeTranslations(wordIndexDict, frequencyDict, output):
             out.write('\n')
 
 
-
-
-
 def main():
     frequencyDict = {}
     wordIndexDict = {}
@@ -96,7 +93,7 @@ def main():
     if len(sys.argv) == 5:
         createDict(frequencyDict, wordIndexDict, sys.argv[3], sys.argv[4])
 
-    writeTranslations(wordIndexDict, frequencyDict, "/tmp/outtrans.txt")
+    writeTranslations(wordIndexDict, frequencyDict, "/tmp/outtrans.easy.identity.txt")
 
 
 
