@@ -1,7 +1,17 @@
+def getPermutations2(sentence_length):
 
+    perm = []
+    idx = 0
 
+    while (True):
+        if (idx >= sentence_length):
+            break
+        perm.append((idx, idx + 1))
 
-
+        if sentence_length > idx + 1:
+            perm.append((idx, idx + 2))
+        idx += 1
+    return perm
 
 
 def getPermutations(sentence_length):
@@ -58,14 +68,10 @@ def main():
 
     foo = []
     results = []
-    #print s_1
-    #print s_2
     rec(s_1, s_2, foo, results)
-    #print results
+
     print len(results)
     print len(list(set(results)))
-    #for res in results:
-    #    print res
 
 
 
