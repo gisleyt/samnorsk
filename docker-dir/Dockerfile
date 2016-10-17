@@ -7,9 +7,11 @@ RUN apt-get update && apt-get install -y \
     sudo \
   && wget http://apertium.projectjj.com/apt/install-nightly.sh -O - | sudo bash \
   && apt-get update \
-  && apt-get -f install -y apertium-all-dev apertium-nno apertium-nob apertium-nno-nob bzip2 python-pip python-dev build-essential \
+  && apt-get -f install -y apertium-all-dev apertium-nno apertium-nob apertium-nno-nob bzip2 python-pip python-dev build-essential python-levenshtein \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+RUN sudo pip install fuzzywuzzy
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -18,7 +20,7 @@ ENV LC_ALL en_US.UTF-8
 
 RUN mkdir -p /samnorsk
 ADD helloapertium.py /samnorsk
-ADD createDictionary.py /samnorsk
+ADD createSynonymDictionary.py /samnorsk
 ADD fetchWikiDump.sh /samnorsk
 WORKDIR /samnorsk
 
