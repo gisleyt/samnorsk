@@ -16,7 +16,7 @@ downloads/
 eggs/
 .eggs/
 .idea
-lib/
+# lib/
 lib64/
 parts/
 sdist/
