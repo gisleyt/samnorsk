@@ -3,10 +3,10 @@ import re
 import subprocess
 
 
-def translate(sents):
+def translate(sents, direction):
     sents = [re.sub(r'\s+', ' ', sent) for sent in sents]
 
-    proc = subprocess.Popen(['apertium', 'nno-nob'],
+    proc = subprocess.Popen(['apertium', direction],
                             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     output, err = proc.communicate(u'\n'.join(sents).encode('utf-8'))

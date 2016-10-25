@@ -8,4 +8,4 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 from apertium import translate
 
 if __name__ == '__main__':
-    print(translate(['Eg skriv nynorsk!']))
+    print(translate(['Eg skriv nynorsk!'], 'nno-nob'))
