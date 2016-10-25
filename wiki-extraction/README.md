@@ -1,24 +1,21 @@
-# Scripts for extracting wiki data
+# Building simple translation dictionary
 
-The docker image is set up with python and the extraction script.
+This software builds a data derived simple translation dictionary from Nynorsk to Bokmål. This can be used for dual language text  normalization of Norwegian for search, IR or other purposes where high quality translation is not needed. 
 
-Build the docker image with f.ex. this command:
+The docker image is set up with python and dictionary build scripts.
 
-    docker build -t wiki-extraction .
+Use the ```build-dictionaries.sh``` to build the dictionary files. Artifacts and Wikipedia dumps are stored in ```../data``` relative to where you run the script. Edit the ```$DATA``` variable if you want to change the location. It uses all processors by default. Edit the ```$PROCS``` variable to change tis behaviour.
 
-If you have the wikipedia dump in a folder called data you can set up a docker volume for the input
-dump and output json file like f.ex. the following:
+The script builds the following files in the data directory:
 
-    docker run -v `pwd`/data:/data wiki-extraction bash -l -c "wiki_articles_to_json_file.py -d /data/nnwiki-20161001-pages-articles.xml.bz2 -o /data/test.json"
+    nn-dict-top5-filtered.txt
+    no-dict-top5-filtered.txt
+    merged-dict-top5-filtered.txt
 
-You'll need to run a bash login shell for the environment to be setup.
+Which is the translation dictionaries from Nynorsk to Bokmål based on the NN wiki, NO wiki or both respectively.
 
-See bin/wiki_articles_to_json_file.py for command line arguments.
-
-You can then build the frequency MT derived dictionary:
-
-    docker run -v `pwd`/data:/data wiki-extraction bash -l -c "build_dictionary.py -i /data/test.json -o /data/test.txt"
-    
+TODO find best filtering criteria.
+TODO directly generate Solr synonym files.
 
 Synonym dictionaries can be built with
 (TODO: NOT WORKING DUE TO python 3 dependency issues)
