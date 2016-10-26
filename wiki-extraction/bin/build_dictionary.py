@@ -11,7 +11,7 @@ from argparse import ArgumentParser
 from bz2 import BZ2File
 from gzip import GzipFile
 
-from future.moves.itertools import repeat
+from future.moves.itertools import repeat, islice
 from nltk.tokenize import sent_tokenize
 
 try:
@@ -95,6 +95,10 @@ def article_to_pairs(arg):
 
         pairs += compare(tokens, trans_tokens)
 
+    del article
+    del sents
+    del translations
+
     return pairs
 
 
@@ -125,8 +129,18 @@ def main():
                                        trans_tf_filter=opts.trans_tf_filter, trans_df_filter=opts.trans_df_filter,
                                        top_n=opts.top_n, print_counts=not opts.supress_counts)
 
-    for pairs in pool.map(article_to_pairs, zip(articles(wiki_fn, limit=limit), repeat(direction))):
-        trans_counter.update(pairs)
+    gen = articles(wiki_fn, limit=limit)
+
+    while True:
+        chunk = list(islice(gen, 0, 100))
+
+        if not chunk:
+            break
+
+        for pairs in pool.map(article_to_pairs, zip(chunk, repeat(direction))):
+            trans_counter.update(pairs)
+
+            del pairs
 
     with io.open(out_fn, mode='w', encoding='utf-8') as f:
         trans_counter.print(f)
