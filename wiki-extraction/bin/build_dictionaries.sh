@@ -37,3 +37,18 @@ if [ ! -f ${DATA_DIR}/merged-dict-top5-filtered.txt ]; then
     docker run -v `pwd`/${DATA_DIR}:/data wiki-extraction bash -l -c \
         "dict_cross_merge.py -k /data/nn-dict-top5-filtered.txt -m /data/no-dict-top5-filtered.txt -o data/merged-dict-top5-filtered.txt"
 fi
+
+if [ !-f ${DATA_DIR}/merged-dict-top5-filtered.solr ]; then
+    docker run -v `pwd`/${DATA_DIR}:/data wiki-extraction bash -l -c \
+        "counts_to_solr.py -i ../data/merged-dict-top5-filtered.txt -o ../data/merged-dict-top5-filtered.solr"
+fi
+
+if [ !-f ${DATA_DIR}/nn-dict-top5-filtered.solr ]; then
+    docker run -v `pwd`/${DATA_DIR}:/data wiki-extraction bash -l -c \
+        "counts_to_solr.py -i ../data/nn-dict-top5-filtered.txt -o ../data/nn-dict-top5-filtered.solr"
+fi
+
+if [ !-f ${DATA_DIR}/no-dict-top5-filtered.solr ]; then
+    docker run -v `pwd`/${DATA_DIR}:/data wiki-extraction bash -l -c \
+        "counts_to_solr.py -i ../data/no-dict-top5-filtered.txt -o ../data/n0-dict-top5-filtered.solr"
+fi

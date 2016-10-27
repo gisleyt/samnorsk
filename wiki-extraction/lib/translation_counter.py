@@ -55,7 +55,7 @@ class TranslationCounter():
 
         return self
 
-    def print(self, f):
+    def print(self, f, format='counts'):
         for key, counts in self.count_dict.items():
             if (self.source_tf[key] >= self.source_tf_filter) and \
                     (self.source_df[key] / float(self.count_docs) <= self.source_df_filter):
@@ -70,7 +70,11 @@ class TranslationCounter():
             if self.top_n:
                 candidates = candidates[:self.top_n]
 
-            f.write(u'%s\t%s\n' % (key, ' '.join([self._format(v, c) for v, c in candidates])))
+            if candidates:
+                if format == 'counts':
+                    f.write(u'%s\t%s\n' % (key, ' '.join([self._format(v, c) for v, c in candidates])))
+                elif format == 'solr':
+                    f.write(u'%s => %s\n' % (key, candidates[0][0]))
 
     def cross_merge(self, other_counter):
         for key, counter in other_counter.count_dict.items():
