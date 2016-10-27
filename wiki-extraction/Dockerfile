@@ -35,12 +35,13 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
 ENV PATH /opt/conda/bin:$PATH
 
 RUN mkdir -p /software
-COPY requirements.txt /software
-RUN conda install -q -y --file /software/requirements.txt
+COPY environment.yml /software
+RUN conda env create -q --force -f /software/environment.yml
 
 COPY lib /software/lib
 COPY bin /software/bin
 RUN chmod +x /software/bin/*
 RUN echo 'export PATH=/software/bin:$PATH' > /etc/profile.d/software.sh
+RUN echo '. activate base' >> /etc/profile.d/software.sh
 
-RUN /software/bin/install_models.py
+RUN /bin/bash -c -l /software/bin/install_models.py
