@@ -43,14 +43,14 @@ def main():
     while True:
         chunk = islice(gen, 0, 1000)
 
-        if not chunk:
-            break
-
         actions = [{'_index': es_index,
                     '_type': 'article',
                     '_id': article['id'] if not prefix else '%s-%s' % (prefix, article['id']),
                     '_source': article}
                    for article in chunk]
+
+        if not actions:
+            break
 
         helpers.bulk(es, actions)
 
