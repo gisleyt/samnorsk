@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 
 import io
-import json
 import logging
 import multiprocessing
 import os
-import re
 import sys
 from argparse import ArgumentParser
-from bz2 import BZ2File
-from gzip import GzipFile
 
 from future.moves.itertools import repeat, islice
 from nltk.tokenize import sent_tokenize
@@ -24,38 +20,7 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 
 from apertium import translate
 from translation_counter import TranslationCounter
-
-
-def articles(wiki_json_fn, limit=None):
-    count = 0
-
-    _, ext = os.path.splitext(wiki_json_fn)
-
-    if ext == '.gz':
-        f = GzipFile(wiki_json_fn, mode='r')
-    elif ext == '.bz2':
-        f = BZ2File(wiki_json_fn, mode='r')
-    else:
-        f = io.open(wiki_json_fn, mode='rb')
-
-    for line in f:
-        count += 1
-
-        article = json.loads(line.decode('utf-8'))
-
-        yield article
-
-        if limit and count > limit:
-            return
-
-        if count % 10000 == 0:
-            logging.info("read %d articles" % count)
-
-    f.close()
-
-
-def tokenize(text):
-    return [token.lower() for token in re.findall(r'\w+', text, re.UNICODE | re.MULTILINE)]
+from wikipedia import articles, tokenize
 
 
 def compare(tokens, trans_tokens):
